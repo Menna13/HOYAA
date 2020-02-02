@@ -5,10 +5,13 @@ import androidx.fragment.app.FragmentActivity;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -133,7 +136,8 @@ public class MainActivity extends FragmentActivity implements LocationListener {
     }
 
 }
- */
+*/
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
@@ -149,51 +153,110 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
 //        GooglePlayServicesUtil
 //                .isGooglePlayServicesAvailable(getApplicationContext());
 //        mMap = ((SupportMapFragment) getSupportFragmentManager()
 //                .findFragmentById(R.id.map)).getMapAsync(this);
-        mMap.setMyLocationEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker")
-                .draggable(true)
-                .snippet("Hello")
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+        if(mMap != null) {
+            mMap.setMyLocationEnabled(true);
 
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                // TODO Auto-generated method stub
-                // Here your code
-                Toast.makeText(MainActivity.this, "Dragging Start",
-                        Toast.LENGTH_SHORT).show();
-            }
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(0, 0))
+                    .title("Marker")
+                    .draggable(true)
+                    .snippet("Hello")
+                    .icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
 
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                // TODO Auto-generated method stub
-                Toast.makeText(
-                        MainActivity.this,
-                        "Lat " + mMap.getMyLocation().getLatitude() + " "
-                                + "Long " + mMap.getMyLocation().getLongitude(),
-                        Toast.LENGTH_LONG).show();
-                System.out.println("yalla b2a "
-                        + mMap.getMyLocation().getLatitude());
-            }
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
 
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                // TODO Auto-generated method stub
-                // Toast.makeText(MainActivity.this, "Dragging",
-                // Toast.LENGTH_SHORT).show();
-                System.out.println("Draagging");
-            }
-        });
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    // TODO Auto-generated method stub
+                    // Here your code
+                    Toast.makeText(MapsActivity.this, "Dragging Start",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    // TODO Auto-generated method stub
+                    LatLng position = marker.getPosition();
+
+//                new GoogleApiClient.Builder()
+//                        .addApi(LocationServices.API)
+//                        .addConnectionCallbacks(this)
+//                        .addOnConnectionFailedListener(this)
+//                        .build();
+
+                    Toast.makeText(
+                            MapsActivity.this,
+                            "Lat " + position.latitude + " "
+                                    + "Long " + position.longitude,
+                            Toast.LENGTH_LONG).show();
+//                    System.out.println("yalla b2a "
+//                            + mMap.getMyLocation().getLatitude());
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                    // TODO Auto-generated method stub
+                    // Toast.makeText(MainActivity.this, "Dragging",
+                    // Toast.LENGTH_SHORT).show();
+                    System.out.println("Draagging");
+                }
+            });
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    public boolean onMarkerClick(final Marker marker) {
+        if (marker.equals(mMap)) {
+            LatLng position = marker.getPosition();
+            // handle click here
+            // map.getMyLocation();
+            System.out.println("Clicked");
+            double lat = position.latitude;
+            System.out.println("Lat" + lat);
+            Toast.makeText(MapsActivity.this,
+                    "Current location " + position.latitude,
+                    Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        // TODO Auto-generated method stub
+
+    }
+
+
 
 
     /**
@@ -254,29 +317,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return parsedDistance;
     }
-    @Override
-    public void onLocationChanged(Location location) {
-        // TODO Auto-generated method stub
 
-    }
 
-    @Override
-    public void onProviderDisabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        // TODO Auto-generated method stub
-
-    }
 }
 
 
