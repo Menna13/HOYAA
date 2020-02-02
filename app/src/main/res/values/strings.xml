@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">HOYA</string>
     <string name="title_activity_maps">Map</string>
+    <string name="submit">Submit</string>
+    <string name="enter_state_here_ex_ny">Enter State Here. ex: NY</string>
 </resources>
